@@ -16,6 +16,8 @@ abstract class Tree
         return $this->id;
     }
 
+    abstract function getCount();
+
 
 }
 
@@ -91,6 +93,11 @@ class AppleTree extends Tree
         }
     }
 
+    function getCount()
+    {
+        return count($this->apples);
+    }
+
 }
 
 class PearTree extends Tree
@@ -118,6 +125,10 @@ class PearTree extends Tree
         }
     }
 
+    function getCount()
+    {
+        return count($this->pears);
+    }
 }
 
 class Garden
@@ -136,12 +147,30 @@ class Garden
         }
         return null;
     }
+
+    function getCountTrees()
+    {
+        return count($this->trees);
+    }
+
+    function getInfo()
+    {
+        $appleTree = 0;
+        $pearTree = 0;
+        foreach ($this->trees as $tree) {
+            if ($tree instanceof AppleTree)
+                $appleTree++;
+            if ($tree instanceof PearTree)
+                $pearTree++;
+        }
+        echo 'Кол-во яблонь: ' . $appleTree . PHP_EOL;
+        echo 'Кол-во груш: ' . $pearTree . PHP_EOL;
+    }
 }
 
 class Worker
 {
-    private Garden $garden;
-    private array $fruits;
+    public Garden $garden;
 
     function __construct(Garden $garden)
     {
@@ -187,10 +216,10 @@ class Worker
                 $weightPears += $fruit->weight;
             }
         }
-        echo 'Кол-во яблок: ' . $countApples;
-        echo 'Общий вес яблок: ' . $weightApples;
-        echo 'Кол-во груш: ' . $countPears;
-        echo 'Общий вес груш: ' . $weightPears;
+        echo 'Кол-во яблок: ' . $countApples . PHP_EOL;
+        echo 'Общий вес яблок: ' . $weightApples . 'гр' . PHP_EOL;
+        echo 'Кол-во груш: ' . $countPears . PHP_EOL;
+        echo 'Общий вес груш: ' . $weightPears . 'гр' . PHP_EOL;
     }
 }
 
