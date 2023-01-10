@@ -70,10 +70,10 @@ class AppleTree extends Tree
 {
     private array $apples;
 
-    function __construct(int $id, array $apples)
+    function __construct(int $id)
     {
         parent::__construct($id);
-        $this->apples = $apples;
+        $this->createApples();
     }
 
     function getApple()
@@ -84,16 +84,23 @@ class AppleTree extends Tree
         return null;
     }
 
+    function createApples()
+    {
+        for ($i = 0; $i < rand(60, 100); $i++) {
+            $this->apples[] = new Apple(rand(150, 180));
+        }
+    }
+
 }
 
 class PearTree extends Tree
 {
     private array $pears;
 
-    function __construct(int $id, array $pears)
+    function __construct(int $id)
     {
         parent::__construct($id);
-        $this->pears = $pears;
+        $this->createPears();
     }
 
     function getPear()
@@ -104,15 +111,22 @@ class PearTree extends Tree
         return null;
     }
 
+    function createPears()
+    {
+        for ($i = 0; $i < rand(25, 30); $i++) {
+            $this->pears[] = new Pear(rand(130, 170));
+        }
+    }
+
 }
 
 class Garden
 {
     private array $trees;
 
-    function __construct(array $trees)
+    function addTree(Tree $tree)
     {
-        $this->trees = $trees;
+        $this->trees[] = $tree;
     }
 
     function getTrees()
@@ -124,4 +138,59 @@ class Garden
     }
 }
 
+class Worker
+{
+    private Garden $garden;
+    private array $fruits;
+
+    function __construct(Garden $garden)
+    {
+        $this->garden = $garden;
+    }
+
+    function addTree(Tree $tree)
+    {
+        $this->garden->addTree($tree);
+    }
+
+    function getFruits()
+    {
+        $harvestedFruits = [];
+        foreach ($this->garden->getTrees() as $tree) {
+            if ($tree instanceof AppleTree)
+                for ($i = 0; $i < rand(40, 50); $i++) {
+                    $harvestedFruits[] = $tree->getApple();
+                }
+
+            if ($tree instanceof PearTree)
+                for ($i = 0; $i < rand(0, 20); $i++) {
+                    $harvestedFruits[] = $tree->getPear();
+                }
+
+        }
+        return $harvestedFruits;
+    }
+
+    function getInfoOfPackFruits(array $fruits)
+    {
+        $countApples = 0;
+        $weightApples = 0;
+        $countPears = 0;
+        $weightPears = 0;
+        foreach ($fruits as $fruit) {
+            if ($fruit instanceof Apple) {
+                $countApples++;
+                $weightApples += $fruit->weight;
+            }
+            if ($fruit instanceof Pear) {
+                $countPears++;
+                $weightPears += $fruit->weight;
+            }
+        }
+        echo 'Кол-во яблок: ' . $countApples;
+        echo 'Общий вес яблок: ' . $weightApples;
+        echo 'Кол-во груш: ' . $countPears;
+        echo 'Общий вес груш: ' . $weightPears;
+    }
+}
 
